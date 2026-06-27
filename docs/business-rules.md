@@ -252,7 +252,7 @@ Depois que a simulacao for gerada, o usuario deve ver uma tela completa de resul
 - Insights gerados pela IA.
 - Sugestoes praticas.
 - Ideias de renda extra.
-- Um plano de acao claro.
+- Um plano de ação claro.
 - Uma mensagem final.
 
 O resultado deve parecer pessoal e util, nao generico.
