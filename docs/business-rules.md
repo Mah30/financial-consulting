@@ -8,6 +8,8 @@ Poket Mentor is a personal financial planning web application that helps users u
 
 The application acts as an AI-powered financial mentor. It collects financial information through a form and uses Google Gemini to generate a personalized financial diagnosis, practical recommendations, extra income ideas, and an action plan to help the user move toward their goal.
 
+The application should behave as a digital financial educator, offering educational guidance and planning support without replacing professional financial advice.
+
 ### 2. Main Objective
 
 The main objective of the application is to help users answer the following question:
@@ -32,6 +34,8 @@ The user must fill out a financial simulation form with the following informatio
 4. Financial goal: the objective the user wants to achieve.
 5. Goal cost: the estimated amount of money required to achieve the goal.
 6. Desired timeline: the number of months in which the user plans to achieve the goal.
+
+The form should be presented in steps to make the experience simpler, more guided, and less tiring for the user.
 
 After filling out the form, the user clicks the "Generate Simulation" button.
 
@@ -174,6 +178,8 @@ Poket Mentor e uma aplicacao web de planejamento financeiro pessoal que ajuda o 
 
 A aplicacao funciona como um mentor financeiro com inteligencia artificial. Ela coleta informacoes financeiras por meio de um formulario e usa o Google Gemini para gerar um diagnostico personalizado, recomendacoes praticas, ideias de renda extra e um plano de acao para ajudar o usuario a se aproximar do seu objetivo.
 
+A aplicacao deve se comportar como um educador financeiro digital, oferecendo orientacao educativa e apoio ao planejamento sem substituir uma consultoria financeira profissional.
+
 ### 2. Objetivo Principal
 
 O principal objetivo da aplicacao é ajudar o usuario a responder a seguinte pergunta:
@@ -198,6 +204,8 @@ O usuario deve preencher um formulario de simulacao financeira com as seguintes 
 4. Objetivo financeiro: o objetivo que o usuario deseja alcancar.
 5. Custo da meta: o valor estimado necessario para realizar esse objetivo.
 6. Prazo desejado: em quantos meses o usuario planeja atingir a meta.
+
+O formulario deve ser apresentado em etapas para tornar a experiencia mais simples, guiada e menos cansativa para o usuario.
 
 Depois de preencher o formulario, o usuario clica no botao "Gerar Simulacao".
 
