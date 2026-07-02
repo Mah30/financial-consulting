@@ -3,15 +3,16 @@
 @import "@fontsource/inter/600.css";
 @import "@fontsource/inter/700.css";
 @import "@fontsource/inter/800.css";
+@import "./styles/theme.css";
 
 @layer base {
   body {
     font-family: "Inter", system-ui, sans-serif;
     @apply bg-background text-foreground;
     width: 100%;
-    heght: 100%;
-    transition
-      background-color 0.3s ease, 
+    height: 100%;
+    transition:
+      background-color 0.3s ease,
       color 0.3s ease;
   }
 }
