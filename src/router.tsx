@@ -6,7 +6,7 @@ export const router = createBrowserRouter(
     children: [
       {
         path: '/',
-        element: <h1> Simulation Form</h1>,
+        element: <h1> Simulation Form </h1>,
       },
       {
         path: '/result',
