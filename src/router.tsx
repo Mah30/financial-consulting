@@ -1,18 +1,14 @@
-import { createBrowserRouter } from "react-router-dom";
-import { RootLayout } from "./components/layout/RootLayout";
+import { createBrowserRouter } from 'react-router-dom'
 
-export const router = createBrowserRouter(
-  [{
-    
-    element: < RootLayout />,
+import { RootLayout } from './components/layout/RootLayout'
+
+export const router = createBrowserRouter([
+  {
+    element: <RootLayout />,
     children: [
       {
         path: '/',
-        element: 
-        
-          <h1>Simulation Form</h1>   
-          
-        ,
+        element: <h1>Simulation Form</h1>,
       },
       {
         path: '/result',
@@ -23,5 +19,5 @@ export const router = createBrowserRouter(
         element: <h1>Simulation History</h1>,
       },
     ],
-},]
-)
+  },
+])
