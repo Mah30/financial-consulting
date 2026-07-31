@@ -6,6 +6,7 @@ import { Input, type InputProps } from '../../shared/Input';
 import { formatCurrencyMask } from '../../../utils/currency';
 
 export interface FormStepProps {
+  id: string
   icon: LucideIcon
   title: string
   question: string
