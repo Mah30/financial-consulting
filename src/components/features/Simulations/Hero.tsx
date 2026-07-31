@@ -5,7 +5,7 @@ export function SimulationHero() {
     <div className="mb-8 text-center">
       <div className="flex flex-col items-center sm:flex-row">
         <h1 className="text-foreground text-3xl font-semibold sm:text-4xl">
-          Vamos planejar seu futuro
+          Let's plan your future
         </h1>
         <img
           src={PiggyBankImage}
@@ -15,7 +15,7 @@ export function SimulationHero() {
         />
       </div>
       <p className="text-muted-foreground text-sm">
-        Responda algumas questões para ter insights financeiros personalizados.
+        Answer a few questions to get personalized financial insights.
       </p>
     </div>
   )
