@@ -13,7 +13,7 @@ import { useParams } from 'react-router-dom'
 import { Card } from '../components/features/SimulationResults/Card'
 import { PageHero } from '../components/shared/PageHero'
 import { useSimulationStorage } from '../components/hooks/useSimulationStorage'
-
+import { calcMonthlySavings } from '../utils/simulation'
 
 export function SimulationResultsPage() {
   const { id } = useParams<{ id: string }>()
@@ -25,7 +25,7 @@ export function SimulationResultsPage() {
     return <p>Simulation not found.</p>
   }
 
- 
+  const monthlySavings = calcMonthlySavings(data)
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-10 sm:py-14">
@@ -50,12 +50,12 @@ export function SimulationResultsPage() {
           variant="primary"
           icon={PiggyBank}
           label="Economia mensal"
-          value={''}
+          value={`R$ ${monthlySavings.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
           subtitle={'Economia mensal necessária'}
         />
       </div>
       <div className="grid gap-6 lg:grid-cols-3">
-      
+        
         <div className="order-1 flex flex-col gap-6 lg:order-2">
           <Card
             icon={Wallet}
