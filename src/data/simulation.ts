@@ -10,17 +10,18 @@ import {
 
 
 import type { FormStepProps } from '../components/features/Simulations/FormStep'
+import { InsightData } from '../services/aiService'
 
 
 export const simulationFormSteps = [
   {
     id: 'income',
     icon: PiggyBank,
-    title: 'Renda mensal bruta',
+    title: 'Gross monthly income',
     question:
-      'Quanto é depositado na sua conta todo mês (somando todas as fontes)?',
+      'How much is deposited into your account every month (from all sources combined)',
     inputProps: {
-      placeholder: 'ex: 5.000,00',
+      placeholder: 'e.g. 5,000.00',
       prefix: 'R$',
       maxLength: 12,
     },
@@ -28,11 +29,11 @@ export const simulationFormSteps = [
   {
     id: 'expenses',
     icon: CreditCard,
-    title: 'Custos fixos de vida',
+    title: 'Fixed living costs',
     question:
-      'Quanto você gasta mensalmente com custos fixos (aluguel, contas, etc)?',
+      'How much do you spend each month on fixed costs (rent, bills, etc.)?',
     inputProps: {
-      placeholder: 'ex: 2.000,00',
+      placeholder: 'e.g. 2,000.00',
       prefix: 'R$',
       maxLength: 12,
     },
@@ -40,11 +41,11 @@ export const simulationFormSteps = [
   {
     id: 'debts',
     icon: Landmark,
-    title: 'Dívidas / parcelas',
+    title: 'Debts / installments',
     question:
-      'Você tem algum valor comprometido com parcelas ou empréstimos mensalmente?',
+      'Do you have any amount committed to installments or loans each month?',
     inputProps: {
-      placeholder: 'ex: 500,00',
+      placeholder: 'e.g. 500.00',
       prefix: 'R$',
       maxLength: 12,
     },
@@ -52,20 +53,20 @@ export const simulationFormSteps = [
   {
     id: 'goalName',
     icon: Goal,
-    title: 'Nome da meta',
-    question: 'Qual o objetivo que você deseja alcançar?',
+    title: 'Goal name',
+    question: 'What goal do you want to achieve?',
     inputProps: {
-      placeholder: 'ex: Viagem para o Japão',
+      placeholder: 'e.g. Trip to Japan',
       maxLength: 50,
     },
   },
   {
     id: 'goalAmount',
     icon: Wallet,
-    title: 'Custo da meta',
-    question: 'Quanto custa realizar esse sonho?',
+    title: 'Goal cost',
+    question: 'How much does it cost to make this dream happen?',
     inputProps: {
-      placeholder: 'ex: 15.000,00',
+      placeholder: 'e.g. 15,000.00',
       prefix: 'R$',
       maxLength: 12,
     },
@@ -73,17 +74,17 @@ export const simulationFormSteps = [
   {
     id: 'goalDeadline',
     icon: CalendarClock,
-    title: 'Prazo desejado',
-    question: 'Em quantos meses você planeja atingir esse objetivo?',
+    title: 'Desired deadline',
+    question: 'In how many months do you plan to reach this goal?',
     inputProps: {
       type: 'number',
-      placeholder: 'ex: 12',
-      suffix: 'meses',
+      placeholder: 'e.g. 12',
+      suffix: 'months',
       min: 1,
       max: 120,
     },
     submitButtonProps: {
-      label: 'Gerar simulação',
+      label: 'Generate simulation',
       emojiIcon: '✨',
     },
   },
@@ -94,3 +95,7 @@ export type SimulationFormData = Record<
   string
 >
 
+export type SimulationRecord = SimulationFormData & {
+  id: string
+  insight?: InsightData
+}

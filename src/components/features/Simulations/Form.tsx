@@ -1,33 +1,62 @@
-import { PiggyBank } from 'lucide-react'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+import { type SimulationFormData, simulationFormSteps } from '../../../data/simulation'
+import { useSimulationStorage } from '../../hooks/useSimulationStorage'
 
 import { FormStep } from './FormStep'
 import { StepProgress } from './Progress'
 
 export const SimulationForm = () => {
-  const handleBack = () => {
-    console.log('Back to previous step')
+  const { saveFormData } = useSimulationStorage()
+  const navigate = useNavigate()
+
+  const [currentStepIndex, setCurrentStepIndex] = useState(0)
+  const [formData, setFormData] = useState<SimulationFormData>(
+    {} as SimulationFormData,
+  )
+  const totalSteps = simulationFormSteps.length
+  const currentStep = simulationFormSteps[currentStepIndex]
+
+  const handleNextStep = (value: string) => {
+    const updatedFormData = { ...formData, [currentStep.id]: value }
+    setFormData(updatedFormData)
+
+    console.log({ updatedFormData })
+
+    if (currentStepIndex + 1 > totalSteps - 1) {
+      const id = saveFormData(updatedFormData)
+      void navigate(`/result/${id}`)
+      return
+    }
+
+    setCurrentStepIndex((prev) => prev + 1)
   }
 
-  const handleNext = (value: string) => {
-    console.log('Gross monthly income:', value)
+  const handlePreviousStep = () => {
+    if (currentStepIndex === 0) {
+      return
+    }
+
+    setCurrentStepIndex((prev) => prev - 1)
   }
 
   return (
     <>
-      <StepProgress currentStep={6} totalSteps={10} />
-
+      <StepProgress
+        currentStep={currentStepIndex + 1}
+        totalSteps={totalSteps}
+      />
       <FormStep
-        inputProps={{
-          prefix: 'R$',
-          placeholder: '0.00',
-          inputMode: 'numeric',
-        }}
-        icon={PiggyBank}
-        title="Gross monthly income"
-        question="How much is deposited into your account every month (from all sources combined)"
-        onBack={handleBack}
-        onNext={handleNext}
+        key={currentStep.id}
+        {...currentStep}
+        onBack={handlePreviousStep}
+        onNext={handleNextStep}
+        hideBackButton={currentStepIndex === 0}
       />
     </>
   )
 }
+
+
+

@@ -14,11 +14,11 @@ export const router = createBrowserRouter([
         element: <SimulationFormPage />,
       },
       {
-        path: '/result',
+        path: '/result/:id',
         element: <h1>Simulation Result</h1>,
       },
       {
-        path: '/historico',
+        path: '/history',
         element: <h1>Simulation History</h1>,
       },
     ],
