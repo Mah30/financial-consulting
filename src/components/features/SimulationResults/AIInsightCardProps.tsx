@@ -1,8 +1,10 @@
 import 'react-loading-skeleton/dist/skeleton.css'
 import Skeleton from 'react-loading-skeleton'
-import { useInsight } from '../../hooks/useInsight'
+import { useInsight } from '../../../hooks/useInsight'
 import { Content } from '../Insights/Content'
 import { Error } from '../Insights/Error'
+
+
 
 interface AIInsightCardProps {
   simulationId: string

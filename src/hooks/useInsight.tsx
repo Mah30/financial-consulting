@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { buildAIPrompt } from '../../data/aiPrompt'
-import type { SimulationRecord } from '../../data/simulation'
+import { buildAIPrompt } from '../../src/data/aiPrompt'
+import type { SimulationRecord } from '../../src/data/simulation'
 import { useSimulationStorage } from '../hooks/useSimulationStorage'
-import { getInsight, type InsightData } from '../../services/aiService'
+import { getInsight, type InsightData } from '../../src/services/aiService'
+
+
 
 export const useInsight = (id: string) => {
   const isRequestPending = useRef(false)
@@ -22,7 +24,7 @@ export const useInsight = (id: string) => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Necessário o uso do useCallback pois temos que colocar essa função 
+  // Necessário o uso do useCallback pois temos que colocar essa função
   // Como array de dependências do useEffect
   const fetchInsight = useCallback(
     async (simulationId: string) => {

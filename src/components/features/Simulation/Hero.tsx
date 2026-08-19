@@ -1,11 +1,13 @@
 import PiggyBankImage from '@/assets/images/piggy-bank.png'
 
+
+
 export function SimulationHero() {
   return (
     <div className="mb-8 text-center">
       <div className="flex flex-col items-center sm:flex-row">
         <h1 className="text-foreground text-3xl font-semibold sm:text-4xl">
-          Let's plan your future
+          Vamos planejar seu futuro
         </h1>
         <img
           src={PiggyBankImage}
@@ -15,7 +17,7 @@ export function SimulationHero() {
         />
       </div>
       <p className="text-muted-foreground text-sm">
-        Answer a few questions to get personalized financial insights.
+        Responda algumas questões para ter insights financeiros personalizados.
       </p>
     </div>
   )

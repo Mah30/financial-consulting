@@ -1,40 +1,48 @@
 import { Clock, Moon, Sun, TrendingUp, Wallet } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-
-import { useTheme } from '../hooks/useTheme'
-import Button from './Button'
+import { useTheme } from '../../hooks/useTheme'
+import { Button }  from './Button'
 import { Divider } from './Divider'
 
-const Header = () => {
+
+
+export function Header() {
   const navigate = useNavigate()
   const { theme, toggleTheme } = useTheme()
 
   return (
-    <header className="border-b border-border px-6 py-3">
+    <header className="border-b border-(--border) px-6 py-3">
       <nav className="flex items-center justify-between">
+        {/* Logo */}
         <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary">
+          <div className="bg-primary flex h-9 w-9 items-center justify-center rounded-full">
             <Wallet size={20} className="text-primary-foreground" />
           </div>
           <span className="text-lg">
-            <span className="font-medium text-muted-foreground">Poket</span>
+            <span className="text-muted-foreground font-medium">Poket</span>
             <span className="font-extrabold">.mentor</span>
           </span>
         </div>
 
+        {/* Actions Buttons */}
         <div className="flex items-center gap-1">
-          <Button variant="secondary" icon={TrendingUp} onClick={() => void navigate('/')}>
-            <span className="hidden sm:inline">New Simulation</span>
-          </Button>
-
-          <Button variant="ghost" icon={Clock} onClick={() => void navigate('/history')}>
-            <span className="hidden sm:inline">History</span>
-          </Button>
-
-          <Divider orientation="vertical" />
-
           <Button
-            aria-label={`Change theme ${theme === 'light' ? 'dark' : 'light'}`}
+            variant="secondary"
+            icon={TrendingUp}
+            onClick={() => void navigate('/')}
+          >
+            <span className="hidden sm:inline">Nova Simulação</span>
+          </Button>
+          <Button
+            variant="ghost"
+            icon={Clock}
+            onClick={() => void navigate('/historico')}
+          >
+            <span className="hidden sm:inline">Histórico</span>
+          </Button>
+          <Divider orientation="vertical" />
+          <Button
+            aria-label={`Mudar para tema ${theme === 'light' ? 'escuro' : 'claro'}`}
             variant="ghost"
             icon={theme === 'light' ? Moon : Sun}
             onClick={toggleTheme}
@@ -44,5 +52,3 @@ const Header = () => {
     </header>
   )
 }
-
-export default Header

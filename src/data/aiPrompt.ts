@@ -1,7 +1,8 @@
 import { parseCurrency } from '../utils/currency'
 import { calcMonthlySavings } from '../utils/simulation'
-
 import type { SimulationRecord } from './simulation'
+
+
 
 const RESPONSE_SCHEMA = `{
   "feasibility": {

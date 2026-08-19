@@ -2,6 +2,7 @@ import type { LucideIcon } from 'lucide-react';
 import type { ButtonHTMLAttributes } from 'react';
 
 
+
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant: 'primary' | 'secondary' | 'ghost'
   icon?: LucideIcon
@@ -16,24 +17,20 @@ const variantClasses = {
   ghost: 'rounded-lg text-foreground',
 }
 
-
-const Button = ({
+export function Button({
   variant,
   icon: Icon,
   children,
   className,
   ...props
-}: ButtonProps) => {
-  return ( 
-    <button {...props}
-    className={[baseClasses, variantClasses[variant], className].join(' ')} >
-        {Icon && <Icon size={20} />}
-        {children}
+}: ButtonProps) {
+  return (
+    <button
+      {...props}
+      className={[baseClasses, variantClasses[variant], className].join(' ')}
+    >
+      {Icon && <Icon size={20} />}
+      {children}
     </button>
-   );
+  )
 }
-
-
-
-export default Button;
-

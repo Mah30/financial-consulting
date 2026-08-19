@@ -1,8 +1,9 @@
 import { type PropsWithChildren, useEffect, useState } from 'react'
-
 import { type Theme, ThemeContext } from './ThemeContext'
 
-export const ThemeProvider = ({ children }: PropsWithChildren) => {
+
+
+export function ThemeProvider({ children }: PropsWithChildren) {
   const [theme, setTheme] = useState<Theme>(() => {
     const localStorageTheme = localStorage.getItem('theme') as Theme | null
 

@@ -8,12 +8,13 @@ import {
   Wallet,
 } from 'lucide-react'
 import { useParams } from 'react-router-dom'
-
 import { AIInsightsCard } from '../components/features/SimulationResults/AIInsightCardProps'
 import { Card } from '../components/features/SimulationResults/Card'
 import { PageHero } from '../components/shared/PageHero'
-import { useSimulationStorage } from '../components/hooks/useSimulationStorage'
+import { useSimulationStorage } from '../hooks/useSimulationStorage'
 import { calcMonthlySavings } from '../utils/simulation'
+
+
 
 export function SimulationResultsPage() {
   const { id } = useParams<{ id: string }>()
@@ -22,7 +23,7 @@ export function SimulationResultsPage() {
   const data = id ? getFormData(id) : null
 
   if (!data) {
-    return <p>Simulation not found.</p>
+    return <p>Simulação não encontrada.</p>
   }
 
   const monthlySavings = calcMonthlySavings(data)

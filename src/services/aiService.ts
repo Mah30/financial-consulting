@@ -42,7 +42,7 @@ const callGeminiAPI = async (prompt: string) => {
   })
 
   if (!response.ok) {
-    throw new Error(`Request error: ${response.status}`)
+    throw new Error(`Erro na requisição: ${response.status}`)
   }
 
   return (await response.json()) as GeminiResponse

@@ -1,9 +1,10 @@
 import { ArrowLeft, ArrowRight, type LucideIcon } from 'lucide-react'
-import { type SubmitEvent, useState } from 'react'
+import { type SyntheticEvent, useState } from 'react'
 
-import  Button  from '../../shared/Button';
+import  { Button }   from '../../shared/Button';
 import { Input, type InputProps } from '../../shared/Input';
 import { formatCurrencyMask } from '../../../utils/currency';
+
 
 export interface FormStepProps {
   id: string
@@ -35,7 +36,7 @@ export function FormStep({
 }: FormStepProps & ActionsButtonsProps) {
   const [inputValue, setInputValue] = useState('')
 
-  const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     if (!inputValue) {
@@ -77,7 +78,7 @@ export function FormStep({
               icon={ArrowLeft}
               className="order-2 flex-1 justify-center rounded-xl py-3 sm:order-1"
             >
-              Back
+              Voltar
             </Button>
           )}
           <Button
@@ -87,7 +88,7 @@ export function FormStep({
             disabled={!inputValue}
             className="order-1 flex-1 sm:order-2"
           >
-            {submitButtonProps?.label ?? 'Next'}
+            {submitButtonProps?.label ?? 'Próximo'}
             {submitButtonProps?.emojiIcon}
           </Button>
         </div>

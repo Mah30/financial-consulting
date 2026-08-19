@@ -1,9 +1,12 @@
 import {
   type SimulationFormData,
   type SimulationRecord,
-} from '../../data/simulation'
+} from '../data/simulation'
+
+
 
 const LOCAL_STORAGE_KEY = 'simulation-data'
+
 
 export const useSimulationStorage = () => {
   const saveFormData = (formData: SimulationFormData) => {
