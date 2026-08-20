@@ -4,7 +4,6 @@ interface DividerProps {
   className?: string
 }
 
-
 export function Divider({
   orientation = 'horizontal',
   spacing = 16,

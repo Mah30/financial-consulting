@@ -3,8 +3,6 @@ interface PageHeroProps {
   subtitle: string
 }
 
-
-
 export function PageHero({ title, subtitle }: PageHeroProps) {
   return (
     <>

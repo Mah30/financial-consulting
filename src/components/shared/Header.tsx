@@ -1,10 +1,8 @@
 import { Clock, Moon, Sun, TrendingUp, Wallet } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useTheme } from '../../hooks/useTheme'
-import { Button }  from './Button'
+import { Button } from './Button'
 import { Divider } from './Divider'
-
-
 
 export function Header() {
   const navigate = useNavigate()
@@ -27,6 +25,8 @@ export function Header() {
         {/* Actions Buttons */}
         <div className="flex items-center gap-1">
           <Button
+            type="button"
+            aria-label="Criar nova simulação"
             variant="secondary"
             icon={TrendingUp}
             onClick={() => void navigate('/')}
@@ -34,6 +34,8 @@ export function Header() {
             <span className="hidden sm:inline">Nova Simulação</span>
           </Button>
           <Button
+            type="button"
+            aria-label="Abrir histórico de simulações"
             variant="ghost"
             icon={Clock}
             onClick={() => void navigate('/historico')}
@@ -42,6 +44,7 @@ export function Header() {
           </Button>
           <Divider orientation="vertical" />
           <Button
+            type="button"
             aria-label={`Mudar para tema ${theme === 'light' ? 'escuro' : 'claro'}`}
             variant="ghost"
             icon={theme === 'light' ? Moon : Sun}

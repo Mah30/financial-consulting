@@ -1,8 +1,13 @@
-import { CalendarClock, CreditCard, Goal, Landmark, PiggyBank, Wallet } from 'lucide-react'
+import {
+  CalendarClock,
+  CreditCard,
+  Goal,
+  Landmark,
+  PiggyBank,
+  Wallet,
+} from 'lucide-react'
 import type { FormStepProps } from '../components/features/Simulation/FormStep'
-import type { InsightData } from '../services/aiService'
-
-
+export type { SimulationFormData, SimulationRecord } from './simulationTypes'
 
 export const simulationFormSteps = [
   {
@@ -80,13 +85,3 @@ export const simulationFormSteps = [
     },
   },
 ] satisfies FormStepProps[]
-
-export type SimulationFormData = Record<
-  (typeof simulationFormSteps)[number]['id'],
-  string
->
-
-export type SimulationRecord = SimulationFormData & {
-  id: string
-  insight?: InsightData
-}

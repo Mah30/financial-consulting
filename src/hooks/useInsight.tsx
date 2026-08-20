@@ -1,21 +1,48 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { buildAIPrompt } from '../../src/data/aiPrompt'
-import type { SimulationRecord } from '../../src/data/simulation'
-import { useSimulationStorage } from '../hooks/useSimulationStorage'
-import { getInsight, type InsightData } from '../../src/services/aiService'
+import { isInsightData } from '../data/insight'
+import type { SimulationRecord } from '../data/simulation'
+import {
+  AIServiceError,
+  getInsight,
+  type InsightData,
+} from '../services/aiService'
+import { calculateFeasibility } from '../utils/simulation'
+import { useSimulationStorage } from './useSimulationStorage'
 
+function getErrorMessage(error: unknown) {
+  if (error instanceof AIServiceError) {
+    if (error.status === 429) {
+      return 'O limite de uso do Gemini foi atingido. Aguarde um pouco e tente novamente.'
+    }
 
+    if (error.status === 401 || error.status === 403) {
+      return 'A chave do Gemini é inválida ou não possui permissão.'
+    }
 
+    if (error.status && error.status >= 500) {
+      return 'O Gemini está temporariamente indisponível. Tente novamente.'
+    }
+
+    return error.message
+  }
+
+  if (error instanceof TypeError) {
+    return 'Não foi possível conectar ao Gemini. Verifique sua internet.'
+  }
+
+  return 'Erro ao gerar o diagnóstico. Tente novamente.'
+}
 export const useInsight = (id: string) => {
   const isRequestPending = useRef(false)
   const { getFormData, updateSimulation } = useSimulationStorage()
 
   const [insight, setInsight] = useState<InsightData | null>(() => {
     const simulation = getFormData(id)
+    const cachedInsight = simulation?.insight
 
-    if (simulation?.insight) {
-      return simulation.insight
+    if (isInsightData(cachedInsight)) {
+      return cachedInsight
     }
 
     return null
@@ -40,16 +67,22 @@ export const useInsight = (id: string) => {
       setError(null)
 
       try {
-        const prompt = buildAIPrompt(simulation)
-        const data = await getInsight(prompt)
+        const generatedInsight = await getInsight(simulation)
+        const data: InsightData = {
+          ...generatedInsight,
+          feasibility: {
+            ...generatedInsight.feasibility,
+            status: calculateFeasibility(simulation),
+          },
+        }
         setInsight(data)
 
         updateSimulation(simulationId, {
           ...simulation,
           insight: data,
         } as SimulationRecord)
-      } catch {
-        setError('Erro ao gerar o diagnóstico. Tente novamente.')
+      } catch (requestError) {
+        setError(getErrorMessage(requestError))
       } finally {
         isRequestPending.current = false
         setIsLoading(false)

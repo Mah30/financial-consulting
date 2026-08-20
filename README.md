@@ -1,8 +1,52 @@
-# Planej.ai: Desenvolvendo um Educador Financeiro com React e IA Generativa
+# Poket Mentor: planejamento financeiro com React e IA Generativa
 
-O **Planej.ai** é uma aplicação web de planejamento financeiro pessoal. O usuário preenche um formulário com informações sobre sua renda, gastos e uma meta financeira (como uma viagem ou a compra de um bem), e a aplicação usa inteligência artificial para gerar um diagnóstico personalizado com sugestões práticas, ideias de renda extra e um plano de ação.
+## Como executar
 
-Tudo funciona diretamente no navegador: sem backend, sem banco de dados remoto. Os dados são salvos no `localStorage` e as análises são geradas em tempo real pela API do Google Gemini.
+Requisitos: Node.js 22.23.1 ou superior e npm 10.9.8 ou superior.
+
+```bash
+npm install
+cp .env.example .env
+npm run dev
+```
+
+Depois de copiar o arquivo de ambiente, substitua o valor de
+`GEMINI_API_KEY` pela sua chave do Google Gemini. A chave é lida apenas pela
+função serverless local e não é enviada ao navegador.
+
+## Verificações do projeto
+
+```bash
+npm run lint
+npm run format:check
+npm test
+npm run build
+```
+
+## Publicação na Netlify
+
+1. Envie o repositório para o GitHub e importe-o na Netlify.
+2. A Netlify utilizará o `netlify.toml`: build `npm run build`, publicação em
+   `dist` e funções em `netlify/functions`.
+3. Em **Project configuration → Environment variables**, crie
+   `GEMINI_API_KEY` com escopo que inclua **Functions**.
+4. Opcionalmente, defina `GEMINI_MODEL`. O padrão é
+   `gemini-3.5-flash-lite`.
+5. Inicie um novo deploy.
+
+Não configure a chave com o prefixo `VITE_` na Netlify. Variáveis com esse
+prefixo podem ser incorporadas ao bundle do navegador.
+
+## Segurança
+
+O navegador envia os dados da simulação para `/api/insight`. A Netlify Function
+valida os dados, aplica limite de 10 requisições por minuto por IP/domínio,
+monta o prompt e chama o Gemini usando a chave mantida no servidor.
+
+O **Poket Mentor** é uma aplicação web de planejamento financeiro pessoal. O usuário preenche um formulário com informações sobre sua renda, gastos e uma meta financeira (como uma viagem ou a compra de um bem), e a aplicação usa inteligência artificial para gerar um diagnóstico personalizado com sugestões práticas, ideias de renda extra e um plano de ação.
+
+Os dados e o histórico são salvos no `localStorage`. A análise é gerada por uma
+Netlify Function, que protege a chave e se comunica com a API do Google Gemini.
 
 ---
 
@@ -2004,65 +2048,20 @@ Regras:
 2. No menu lateral, clique em **Get API Key**.
 3. Clique em **Criar chave de API** e dê um nome para ela.
 4. Copie a chave gerada.
-5. Crie o arquivo `.env.local` na raiz do projeto e adicione a chave:
+5. Crie o arquivo `.env` na raiz do projeto e adicione a chave:
 
    ```
-   VITE_GEMINI_API_KEY=sua_chave_aqui
+   GEMINI_API_KEY=sua_chave_aqui
    ```
 
 ---
 
 ### Aula 20: Chamada para a API do Gemini
 
-1. Crie o serviço em `src/services/aiService.ts`:
-
-   ```tsx
-   interface GeminiResponse {
-     candidates: {
-       content: {
-         parts: { text: string }[]
-       }
-     }[]
-   }
-
-   const API_KEY = String(import.meta.env.VITE_GEMINI_API_KEY)
-   const MODEL_NAME = 'gemini-flash-latest'
-   const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`
-
-   const callGeminiAPI = async (prompt: string) => {
-     const response = await fetch(GEMINI_API_URL, {
-       method: 'POST',
-       headers: { 'Content-Type': 'application/json' },
-       body: JSON.stringify({
-         contents: [{ parts: [{ text: prompt }] }],
-       }),
-     })
-
-     if (!response.ok) {
-       throw new Error(`Erro na requisição: ${response.status}`)
-     }
-
-     return (await response.json()) as GeminiResponse
-   }
-
-   export interface InsightData {
-     feasibility: {
-       status: 'viable' | 'needs_adjustment' | 'unfeasible'
-       content: string
-     }
-     diagnosis: { content: string }
-     suggestions: { items: string[] }
-     extraIncome: { items: string[] }
-     investment: { items: string[] }
-     motivation: { content: string }
-   }
-
-   export const getInsight = async (prompt: string) => {
-     const response = await callGeminiAPI(prompt)
-     const json = response.candidates[0].content.parts[0].text
-     return JSON.parse(json) as InsightData
-   }
-   ```
+1. A integração atual está em `netlify/functions/insight.mts`. O frontend envia
+   apenas os dados da simulação para `/api/insight`; a função monta o prompt,
+   acessa `process.env.GEMINI_API_KEY` e chama o Gemini. Nunca faça essa chamada
+   diretamente de `src/services`, pois isso exporia a chave no navegador.
 
 2. Crie o hook `useInsight` em `src/hooks/useInsight.ts`:
 
@@ -2094,8 +2093,7 @@ Regras:
          setError(null)
 
          try {
-           const prompt = buildAIPrompt(simulation)
-           const data = await getInsight(prompt)
+           const data = await getInsight(simulation)
            setInsight(data)
            return data
          } catch {
@@ -2171,8 +2169,7 @@ export const useInsight = (id: string) => {
       setError(null)
 
       try {
-        const prompt = buildAIPrompt(simulation)
-        const data = await getInsight(prompt)
+        const data = await getInsight(simulation)
         setInsight(data)
         return data
       } catch {

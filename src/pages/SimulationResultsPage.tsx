@@ -1,4 +1,3 @@
-
 import {
   CalendarClock,
   CreditCardIcon,
@@ -12,9 +11,10 @@ import { AIInsightsCard } from '../components/features/SimulationResults/AIInsig
 import { Card } from '../components/features/SimulationResults/Card'
 import { PageHero } from '../components/shared/PageHero'
 import { useSimulationStorage } from '../hooks/useSimulationStorage'
-import { calcMonthlySavings } from '../utils/simulation'
-
-
+import {
+  calcMonthlySavings,
+  calcMonthlySavingsNeeded,
+} from '../utils/simulation'
 
 export function SimulationResultsPage() {
   const { id } = useParams<{ id: string }>()
@@ -27,6 +27,7 @@ export function SimulationResultsPage() {
   }
 
   const monthlySavings = calcMonthlySavings(data)
+  const monthlySavingsNeeded = calcMonthlySavingsNeeded(data)
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-10 sm:py-14">
@@ -51,7 +52,7 @@ export function SimulationResultsPage() {
           variant="primary"
           icon={PiggyBank}
           label="Economia mensal"
-          value={`R$ ${monthlySavings.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+          value={`R$ ${monthlySavingsNeeded.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
           subtitle={'Economia mensal necessária'}
         />
       </div>
@@ -76,8 +77,18 @@ export function SimulationResultsPage() {
             value={data.debts}
             subtitle={'Valor comprometido em parcelas/depósito'}
           />
+          <Card
+            icon={PiggyBank}
+            label="Saldo disponível"
+            value={`R$ ${monthlySavings.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+            subtitle="Renda restante após custos e dívidas"
+          />
         </div>
       </div>
+      <p className="text-muted-foreground mt-8 text-center text-xs leading-relaxed">
+        Este diagnóstico tem caráter educativo e não substitui orientação
+        financeira, jurídica, tributária ou de investimentos profissional.
+      </p>
     </main>
   )
 }

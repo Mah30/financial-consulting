@@ -3,48 +3,94 @@ import {
   type SimulationRecord,
 } from '../data/simulation'
 
-
-
 const LOCAL_STORAGE_KEY = 'simulation-data'
 
-
-export const useSimulationStorage = () => {
-  const saveFormData = (formData: SimulationFormData) => {
-    const id = crypto.randomUUID()
-    const record: SimulationRecord = { ...formData, id }
-
-    const storage = localStorage.getItem(LOCAL_STORAGE_KEY)
-    const savedData = storage ? (JSON.parse(storage) as SimulationRecord[]) : []
-
-    localStorage.setItem(
-      LOCAL_STORAGE_KEY,
-      JSON.stringify([...savedData, record]),
-    )
-
-    return id
+function isStoredSimulation(value: unknown): value is SimulationRecord {
+  if (typeof value !== 'object' || value === null) {
+    return false
   }
 
-  const getFormData = (id: string) => {
-    const storage = localStorage.getItem(LOCAL_STORAGE_KEY)
+  const record = value as Partial<SimulationRecord>
 
-    if (!storage) {
-      return null
+  return (
+    typeof record.id === 'string' &&
+    typeof record.income === 'string' &&
+    typeof record.expenses === 'string' &&
+    typeof record.debts === 'string' &&
+    typeof record.goalName === 'string' &&
+    typeof record.goalAmount === 'string' &&
+    typeof record.goalDeadline === 'string'
+  )
+}
+
+function readSimulations(): SimulationRecord[] {
+  try {
+    const storage = localStorage.getItem(LOCAL_STORAGE_KEY)
+    const parsed: unknown = storage ? JSON.parse(storage) : []
+
+    if (!Array.isArray(parsed)) {
+      return []
     }
 
-    const savedData = JSON.parse(storage) as SimulationRecord[]
-    return savedData.find((record) => record.id === id) || null
+    return parsed.filter(isStoredSimulation).map((record) => ({
+      ...record,
+      createdAt: typeof record.createdAt === 'string' ? record.createdAt : '',
+    }))
+  } catch {
+    return []
+  }
+}
+
+function writeSimulations(simulations: SimulationRecord[]) {
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(simulations))
+}
+
+const saveFormData = (formData: SimulationFormData) => {
+  const id = crypto.randomUUID()
+  const record: SimulationRecord = {
+    ...formData,
+    id,
+    createdAt: new Date().toISOString(),
   }
 
-  const updateSimulation = (id: string, data: SimulationRecord) => {
-    const storage = localStorage.getItem(LOCAL_STORAGE_KEY)
-    const savedData = storage ? (JSON.parse(storage) as SimulationRecord[]) : []
+  writeSimulations([...readSimulations(), record])
 
-    const updated = savedData.map((record) =>
-      record.id === id ? { ...data } : record,
-    )
+  return id
+}
 
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated))
-  }
+const getFormData = (id: string) =>
+  readSimulations().find((record) => record.id === id) ?? null
 
-  return { saveFormData, getFormData, updateSimulation }
+const getAllSimulations = () =>
+  readSimulations().sort((a, b) =>
+    (b.createdAt ?? '').localeCompare(a.createdAt ?? ''),
+  )
+
+const updateSimulation = (id: string, data: SimulationRecord) => {
+  const updated = readSimulations().map((record) =>
+    record.id === id ? data : record,
+  )
+
+  writeSimulations(updated)
+}
+
+const deleteSimulation = (id: string) => {
+  writeSimulations(readSimulations().filter((record) => record.id !== id))
+}
+
+const clearSimulations = () => {
+  localStorage.removeItem(LOCAL_STORAGE_KEY)
+}
+
+export const simulationStorage = {
+  saveFormData,
+  getFormData,
+  getAllSimulations,
+  updateSimulation,
+  deleteSimulation,
+  clearSimulations,
+}
+
+export const useSimulationStorage = () => {
+  return simulationStorage
 }

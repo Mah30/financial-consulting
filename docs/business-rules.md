@@ -97,15 +97,15 @@ The result must feel personal and useful, not generic.
 
 ### 7. Technical Scope
 
-The application must run entirely in the browser.
-
-There should be no custom backend or private server API in the initial version.
+The interface and persistence run in the browser. AI requests are proxied by a
+Netlify Function so the Gemini API key is not exposed to the client bundle.
 
 Data should be saved in `localStorage` to simplify persistence and integration during development.
 
-The Google Gemini API will be used directly from the frontend for AI-generated analysis.
+The Google Gemini API is called only by the serverless function.
 
-Important note: because API keys exposed in the browser are not fully private, this approach is acceptable for development, prototypes, and study purposes. For production, the application should later use a secure backend or serverless function to protect sensitive credentials.
+The API key must be stored as a Netlify environment variable with Functions
+scope and must never use the public `VITE_` prefix.
 
 ### 8. Data Persistence Rules
 
@@ -267,15 +267,16 @@ O resultado deve parecer pessoal e util, nao generico.
 
 ### 7. Escopo Tecnico
 
-A aplicacao deve funcionar totalmente pelo navegador.
-
-Nao deve haver backend proprio ou API privada no escopo inicial.
+A interface e a persistencia funcionam no navegador. As requisicoes de IA sao
+intermediadas por uma Netlify Function para que a chave do Gemini nao seja
+exposta no bundle do cliente.
 
 Os dados devem ser salvos no `localStorage` para facilitar a persistencia e a integracao durante o desenvolvimento.
 
-A API do Google Gemini sera usada diretamente no frontend para gerar as analises com IA.
+A API do Google Gemini sera chamada apenas pela funcao serverless.
 
-Observacao importante: como chaves de API expostas no navegador nao sao totalmente privadas, essa abordagem e aceitavel para desenvolvimento, prototipos e estudos. Para producao, a aplicacao deve futuramente usar um backend seguro ou uma funcao serverless para proteger credenciais sensiveis.
+A chave deve ser armazenada como variavel de ambiente da Netlify com escopo de
+Functions e nunca deve utilizar o prefixo publico `VITE_`.
 
 ### 8. Regras de Persistencia de Dados
 

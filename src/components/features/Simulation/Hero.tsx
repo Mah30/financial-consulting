@@ -1,7 +1,5 @@
 import PiggyBankImage from '@/assets/images/piggy-bank.png'
 
-
-
 export function SimulationHero() {
   return (
     <div className="mb-8 text-center">

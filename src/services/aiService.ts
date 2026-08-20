@@ -1,55 +1,70 @@
-interface GeminiResponse {
-  candidates: {
-    content: {
-      parts: { text: string }[]
+import { isInsightData, type InsightData } from '../data/insight'
+import type { SimulationFormData } from '../data/simulation'
+
+export type { InsightData } from '../data/insight'
+
+export class AIServiceError extends Error {
+  public readonly status?: number
+
+  constructor(message: string, status?: number) {
+    super(message)
+    this.name = 'AIServiceError'
+    this.status = status
+  }
+}
+
+const INSIGHT_API_URL = '/api/insight'
+const REQUEST_TIMEOUT_MS = 35_000
+
+function isErrorResponse(value: unknown): value is { error: string } {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    typeof (value as { error?: unknown }).error === 'string'
+  )
+}
+
+export const getInsight = async (
+  simulation: SimulationFormData,
+): Promise<InsightData> => {
+  const controller = new AbortController()
+  const timeout = window.setTimeout(
+    () => controller.abort(),
+    REQUEST_TIMEOUT_MS,
+  )
+
+  try {
+    const response = await fetch(INSIGHT_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      signal: controller.signal,
+      body: JSON.stringify({ simulation }),
+    })
+    const body: unknown = await response.json()
+
+    if (!response.ok) {
+      throw new AIServiceError(
+        isErrorResponse(body)
+          ? body.error
+          : `A função de diagnóstico respondeu com status ${response.status}.`,
+        response.status,
+      )
     }
-  }[]
-}
 
-export interface InsightData {
-  feasibility: {
-    status: 'viable' | 'needs_adjustment' | 'unfeasible'
-    content: string
-  }
-  diagnosis: {
-    content: string
-  }
-  suggestions: {
-    items: string[]
-  }
-  extraIncome: {
-    items: string[]
-  }
-  investment: {
-    items: string[]
-  }
-  motivation: {
-    content: string
-  }
-}
+    if (!isInsightData(body)) {
+      throw new AIServiceError('A função retornou um diagnóstico incompleto.')
+    }
 
-const API_KEY = String(import.meta.env.VITE_GEMINI_API_KEY)
-const MODEL_NAME = 'gemini-flash-latest'
-const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`
+    return body
+  } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') {
+      throw new AIServiceError(
+        'A geração demorou mais de 35 segundos. Tente novamente.',
+      )
+    }
 
-const callGeminiAPI = async (prompt: string) => {
-  const response = await fetch(GEMINI_API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }],
-    }),
-  })
-
-  if (!response.ok) {
-    throw new Error(`Erro na requisição: ${response.status}`)
+    throw error
+  } finally {
+    window.clearTimeout(timeout)
   }
-
-  return (await response.json()) as GeminiResponse
-}
-
-export const getInsight = async (prompt: string) => {
-  const response = await callGeminiAPI(prompt)
-  const json = response.candidates[0].content.parts[0].text
-  return JSON.parse(json) as InsightData
 }

@@ -1,8 +1,9 @@
-import { parseCurrency } from '../utils/currency'
-import { calcMonthlySavings } from '../utils/simulation'
-import type { SimulationRecord } from './simulation'
-
-
+import {
+  calcMonthlySavings,
+  calcMonthlySavingsNeeded,
+  calculateFeasibility,
+} from '../utils/simulation'
+import type { SimulationFormData } from './simulationTypes'
 
 const RESPONSE_SCHEMA = `{
   "feasibility": {
@@ -21,18 +22,21 @@ const RESPONSE_SCHEMA = `{
   "investment": {
     "items": ["<Sugestão de investimento acessível para o perfil apresentado, com foco em atingir a meta>"]
   },
+  "actionPlan": {
+    "items": ["<Passo concreto, mensurável e apresentado em ordem de execução>"]
+  },
   "motivation": {
     "content": "<Mensagem final motivacional e personalizada, citando a meta pelo nome.>"
   }
 }`
 
-export function buildAIPrompt(simulation: SimulationRecord) {
+export function buildAIPrompt(simulation: SimulationFormData) {
   const { income, expenses, debts, goalName, goalAmount, goalDeadline } =
     simulation
 
   const monthlySavings = calcMonthlySavings(simulation)
-  const monthlySavingsNeeded =
-    parseCurrency(goalAmount) / parseInt(goalDeadline)
+  const monthlySavingsNeeded = calcMonthlySavingsNeeded(simulation)
+  const feasibility = calculateFeasibility(simulation)
 
   return `Você é um educador financeiro especializado em finanças pessoais. 
     Analise os dados abaixo e gere um diagnóstico financeiro personalizado com linguagem clara, didática e encorajadora, 
@@ -49,6 +53,7 @@ export function buildAIPrompt(simulation: SimulationRecord) {
     - Prazo desejado: ${goalDeadline} meses
     - Economia mensal necessária para atingir a meta no prazo: ${monthlySavingsNeeded} reais
     - Saldo após reserva para a meta: ${monthlySavings - monthlySavingsNeeded} reais
+    - Classificação calculada pelo aplicativo: ${feasibility}
 
     Retorne APENAS um JSON válido, sem texto adicional, sem blocos de código, neste formato exato:
 
@@ -57,11 +62,9 @@ export function buildAIPrompt(simulation: SimulationRecord) {
     Regras:
     - Todos os textos em português do Brasil
     - Máximo de 4 itens por lista
+    - O plano de ação deve conter passos concretos em ordem de execução
     - Seja específico ao citar valores calculados
     - Não repita informações entre seções
     - Nunca use markdown dentro dos valores do JSON
-    - Para o campo "feasibility.status", use os seguintes critérios:
-      - "viable": saldo após reserva para a meta é maior ou igual a 0
-      - "needs_adjustment": saldo negativo de até 20% do valor da economia mensal necessária
-      - "unfeasible": saldo negativo superior a 20% do valor da economia mensal necessária`
+    - Use exatamente "${feasibility}" no campo "feasibility.status"; essa classificação já foi calculada pelo aplicativo`
 }
