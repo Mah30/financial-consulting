@@ -77,9 +77,10 @@ IA.
 
 ### Melhoria adicional — Responsividade
 
-O cabeçalho e os estilos globais foram ajustados para remover o overflow
-horizontal em telas estreitas. O layout foi conferido em 320, 360, 375, 390,
-768 e 1280 pixels, sem elementos ultrapassando a largura útil da página.
+- O cabeçalho e os estilos globais foram ajustados para remover o overflow
+  horizontal em telas estreitas.
+- O layout foi conferido em 320, 360, 375, 390,
+  768 e 1280 pixels, sem elementos ultrapassando a largura útil da página.
 
 ## Tecnologias utilizadas
 
@@ -97,6 +98,117 @@ horizontal em telas estreitas. O layout foi conferido em 320, 360, 375, 390,
 | React Loading Skeleton | Feedback visual durante o diagnóstico              |
 | Vitest                 | Testes automatizados                               |
 | ESLint e Prettier      | Qualidade e padronização do código                 |
+
+## Estrutura de pastas
+
+```text
+poket-mentor/
+├── docs/
+│   └── business-rules.md              # Regras de negócio do produto
+├── netlify/
+│   └── functions/
+│       ├── conversation.mts           # Endpoint da conversa com a IA
+│       └── insight.mts                # Endpoint do diagnóstico inicial
+├── public/
+│   ├── favicon.svg                    # Ícone da aplicação
+│   └── icons.svg                      # Sprite de ícones SVG
+├── src/
+│   ├── assets/
+│   │   └── images/                    # Imagens utilizadas pela interface
+│   ├── components/
+│   │   ├── features/
+│   │   │   ├── Insights/              # Estados e conteúdo do diagnóstico
+│   │   │   ├── Simulation/            # Formulário guiado em etapas
+│   │   │   └── SimulationResults/     # Cards e conversa do resultado
+│   │   ├── layout/                    # Estrutura compartilhada das páginas
+│   │   └── shared/                    # Botões, inputs e elementos reutilizáveis
+│   ├── context/
+│   │   └── theme/                     # Contexto e provider de tema
+│   ├── data/
+│   │   ├── aiPrompt.ts                # Prompt do diagnóstico estruturado
+│   │   ├── conversation.ts            # Tipos e validação dos turnos
+│   │   ├── conversationPrompt.ts      # Prompt da conversa contextual
+│   │   ├── insight.ts                 # Tipo, schema e validação do insight
+│   │   ├── simulation.ts              # Campos e textos do formulário
+│   │   └── simulationTypes.ts         # Tipos dos dados financeiros
+│   ├── hooks/
+│   │   ├── useConversation.tsx        # Estado e persistência da conversa
+│   │   ├── useInsight.tsx             # Geração e cache do diagnóstico
+│   │   ├── useSimulationStorage.tsx   # Operações com o localStorage
+│   │   └── useTheme.tsx               # Acesso ao contexto de tema
+│   ├── pages/
+│   │   ├── NotFoundPage.tsx           # Página para rotas inexistentes
+│   │   ├── SimulationFormPage.tsx     # Página inicial do formulário
+│   │   ├── SimulationHistoryPage.tsx  # Histórico das simulações
+│   │   └── SimulationResultsPage.tsx  # Resultado financeiro completo
+│   ├── services/
+│   │   └── aiService.ts               # Cliente dos endpoints serverless
+│   ├── styles/
+│   │   └── theme.css                  # Tokens dos temas claro e escuro
+│   ├── utils/
+│   │   ├── currency.ts                # Conversão e formatação monetária
+│   │   ├── simulation.ts              # Cálculos e viabilidade financeira
+│   │   └── validation.ts              # Validação dos campos
+│   ├── App.tsx                        # Componente raiz
+│   ├── index.css                      # Estilos globais
+│   ├── main.tsx                       # Ponto de entrada do React
+│   └── router.tsx                     # Definição das rotas
+├── vite/
+│   └── insightFunctionDev.ts          # Functions executadas no Vite local
+├── eslint.config.js                   # Configuração do ESLint
+├── netlify.toml                       # Build, Functions e redirects da Netlify
+├── package.json                       # Scripts, versões e dependências
+├── tsconfig.app.json                  # TypeScript da aplicação React
+├── tsconfig.functions.json            # TypeScript das Netlify Functions
+├── tsconfig.node.json                 # TypeScript das ferramentas Node/Vite
+└── vite.config.ts                     # Configuração do Vite e Tailwind
+```
+
+Os arquivos `*.test.ts` ficam próximos do código testado nas pastas `hooks`,
+`services` e `utils`, facilitando localizar a implementação e sua respectiva
+cobertura.
+
+## Dependências do projeto
+
+### Dependências de produção
+
+São pacotes utilizados diretamente pela aplicação entregue ao usuário.
+
+| Pacote                   | Versão    | Finalidade                                      |
+| ------------------------ | --------- | ----------------------------------------------- |
+| `@fontsource/inter`      | `^5.2.8`  | Fonte Inter hospedada junto com a aplicação     |
+| `lucide-react`           | `^1.23.0` | Ícones SVG utilizados nos componentes           |
+| `react`                  | `^19.2.7` | Construção da interface                         |
+| `react-dom`              | `^19.2.7` | Renderização dos componentes no navegador       |
+| `react-loading-skeleton` | `^3.5.0`  | Skeleton exibido durante o carregamento da IA   |
+| `react-router-dom`       | `^7.11.0` | Rotas do formulário, resultado, histórico e 404 |
+
+### Dependências de desenvolvimento
+
+São utilizadas para desenvolvimento, tipagem, testes, qualidade do código,
+build e integração serverless.
+
+| Pacote                        | Versão     | Finalidade                                   |
+| ----------------------------- | ---------- | -------------------------------------------- |
+| `@eslint/js`                  | `^10.0.1`  | Regras básicas do ESLint para JavaScript     |
+| `@netlify/functions`          | `^5.3.0`   | Tipos e configuração das Functions           |
+| `@tailwindcss/vite`           | `^4.3.1`   | Integração do Tailwind CSS com o Vite        |
+| `@types/node`                 | `^22.20.0` | Tipos das APIs do Node.js                    |
+| `@types/react`                | `^19.2.17` | Tipos do React                               |
+| `@types/react-dom`            | `^19.2.3`  | Tipos do React DOM                           |
+| `@vitejs/plugin-react`        | `^6.0.3`   | JSX e Fast Refresh no Vite                   |
+| `eslint`                      | `^10.5.0`  | Análise estática do código                   |
+| `eslint-config-prettier`      | `^10.1.8`  | Evita conflitos entre ESLint e Prettier      |
+| `eslint-plugin-react-hooks`   | `^7.1.1`   | Regras para uso correto dos hooks            |
+| `eslint-plugin-react-refresh` | `^0.5.3`   | Regras relacionadas ao Fast Refresh          |
+| `globals`                     | `^17.7.0`  | Definições de variáveis globais por ambiente |
+| `prettier`                    | `^3.8.4`   | Formatação automática                        |
+| `prettier-plugin-tailwindcss` | `^0.8.0`   | Ordenação das classes do Tailwind            |
+| `tailwindcss`                 | `^4.3.1`   | Geração dos estilos utilitários              |
+| `typescript`                  | `^6.0.3`   | Tipagem estática e verificação da compilação |
+| `typescript-eslint`           | `^8.62.0`  | Integração entre TypeScript e ESLint         |
+| `vite`                        | `^8.1.0`   | Servidor local e build de produção           |
+| `vitest`                      | `^4.1.11`  | Execução dos testes automatizados            |
 
 ## Arquivos principais para revisão
 
@@ -116,8 +228,99 @@ horizontal em telas estreitas. O layout foi conferido em 320, 360, 375, 390,
 | `netlify/functions/conversation.mts`                           | Função serverless das perguntas posteriores |
 | `src/utils/simulation.ts`                                      | Cálculos financeiros e viabilidade          |
 
-O registro didático detalhado, com comparações de código antes e depois, está
-em [`docs/lerning-code.md`](docs/lerning-code.md).
+## Arquitetura e decisões técnicas
+
+### Separação de responsabilidades
+
+O projeto separa a integração com IA em camadas para que a interface não
+conheça a chave da API nem os detalhes do Gemini:
+
+1. Os componentes exibem formulário, diagnóstico e conversa.
+2. Os hooks controlam carregamento, erros, cache e persistência.
+3. `aiService.ts` faz as requisições para `/api/insight` e
+   `/api/conversation`.
+4. As Netlify Functions validam os dados, montam os prompts e chamam o Gemini.
+5. Os validadores conferem as respostas antes que elas sejam usadas pela
+   interface ou armazenadas.
+
+Essa divisão mantém apresentação, estado, comunicação HTTP, regras de negócio
+e acesso à API em responsabilidades distintas.
+
+### Diagnóstico e conversa usam prompts diferentes
+
+O diagnóstico inicial e as perguntas posteriores possuem necessidades
+diferentes:
+
+- `buildAIPrompt` recebe os dados financeiros e exige um JSON estruturado com
+  viabilidade, diagnóstico, sugestões, renda extra, investimentos, plano de
+  ação e motivação.
+- `buildConversationPrompt` recebe a simulação, o diagnóstico inicial, toda a
+  conversa anterior e a nova pergunta, retornando texto natural.
+
+Manter os prompts separados evita misturar o contrato rígido do diagnóstico
+com a resposta conversacional. A classificação de viabilidade é calculada pelo
+aplicativo e recalculada no servidor; a IA explica o cenário, mas não substitui
+essa regra determinística.
+
+### Modelo e persistência da conversa
+
+Cada interação é representada por um `ConversationTurn`, contendo identificador,
+pergunta, resposta e data de criação. A conversa pertence à respectiva
+simulação:
+
+```ts
+interface ConversationTurn {
+  id: string
+  question: string
+  answer: string
+  createdAt: string
+}
+```
+
+Ao enviar uma pergunta, o sistema reúne os seis campos da simulação, o insight
+inicial, todo o histórico válido e a nova pergunta. A resposta forma um novo
+turno, é exibida e salva junto à simulação no `localStorage`.
+
+O conteúdo recuperado do navegador não é considerado confiável automaticamente.
+Simulações, insights e turnos são validados em tempo de execução; registros
+antigos ou parcialmente inválidos não devem derrubar a aplicação.
+
+### Desenvolvimento local e produção
+
+Durante `npm run dev`, um middleware do Vite encaminha `/api/insight` e
+`/api/conversation` para os mesmos handlers existentes em
+`netlify/functions`. Na Netlify, esses handlers são publicados como funções
+serverless. Assim, desenvolvimento e produção compartilham prompts, validações
+e tratamento de erros.
+
+### Proteções da integração com IA
+
+- A chave fica somente no ambiente do servidor.
+- Perguntas, simulações, insights e histórico são validados antes da chamada.
+- As requisições possuem limite de tamanho e timeout.
+- As funções aceitam apenas `POST`.
+- Há limite de requisições por IP e domínio.
+- Respostas vazias, incompletas ou em formato inesperado são rejeitadas.
+- O prompt conversacional orienta a IA a ignorar tentativas de alterar seu papel
+  ou apagar o contexto.
+
+### Decisões de interface e responsividade
+
+- O envio é bloqueado enquanto existe uma pergunta pendente, evitando chamadas
+  duplicadas.
+- Estados de carregamento usam `role="status"` e erros usam `role="alert"`.
+- A conversa rola automaticamente quando um novo turno é concluído.
+- Em telas estreitas, o cabeçalho reduz espaçamentos e pode ocultar o texto da
+  marca, preservando todas as ações.
+- O layout usa `min-height: 100dvh`, com fallback para `100vh`, evitando o
+  overflow horizontal que pode surgir ao forçar `width: 100%` no `body`.
+
+### Regressões protegidas por testes
+
+Além dos cálculos e validações, os testes verificam que o contexto completo é
+enviado à conversa, que respostas externas são validadas, que a função
+serverless preserva a classificação calculada e que conversas continuam
+associadas à simulação correta no armazenamento local.
 
 ## Como executar
 
@@ -201,20 +404,133 @@ serverless.
 
 O build gera o diretório `dist`, e as funções ficam em `netlify/functions`.
 
-## Melhorias implementadas
+## Evolução e melhorias implementadas
 
-- Histórico completo de simulações em vez de apenas o último formulário.
-- Cache do insight dentro da própria simulação.
-- Exclusão segura de registros do histórico.
-- Conversa contínua e contextual por simulação.
-- Persistência e recuperação das conversas.
-- Separação entre diagnóstico estruturado e respostas conversacionais.
-- Validação das respostas e dos dados recuperados do `localStorage`.
-- Proteção da chave do Gemini por funções serverless.
-- Tratamento de timeout, indisponibilidade e excesso de requisições.
-- Formatação segura de destaques retornados pela IA.
-- Correção do overflow horizontal no mobile.
-- Testes adicionais para contexto da conversa e persistência.
+O projeto começou como uma SPA com formulário, cálculo financeiro básico e uma
+chamada direta para a IA. A partir dessa base, foram feitas melhorias de
+arquitetura, segurança, confiabilidade, experiência de uso e preparação para
+produção.
+
+### Integração com Gemini e segurança da chave
+
+- A chamada ao Gemini deixou de depender do navegador e passou a acontecer em
+  Netlify Functions.
+- A chave foi retirada do bundle público e passou a ser lida como
+  `GEMINI_API_KEY` exclusivamente no servidor.
+- O frontend passou a consumir endpoints internos (`/api/insight` e
+  `/api/conversation`) sem conhecer provedor, chave ou URL externa.
+- As funções aceitam somente `POST`, limitam o tamanho do corpo, aplicam timeout
+  e rate limit e retornam mensagens adequadas para limite de uso,
+  indisponibilidade e falhas externas.
+- O desenvolvimento local passou a executar os mesmos handlers serverless por
+  meio do middleware do Vite, reduzindo diferenças entre ambiente local e
+  produção.
+
+### Respostas da IA mais previsíveis
+
+- O prompt foi reestruturado com papel, tom, regras, cálculos e formato de saída
+  explícitos.
+- Foi criado um schema para exigir que o diagnóstico contenha todas as seções
+  esperadas.
+- A resposta recebida é convertida e validada em tempo de execução antes de
+  chegar à interface.
+- Respostas vazias, JSON inválido ou conteúdo incompleto são tratados como erro
+  em vez de quebrar a página.
+- A viabilidade financeira permanece uma regra do aplicativo: ela é calculada
+  localmente e recalculada pela função, sem confiar na classificação sugerida
+  pela IA.
+- A renderização dos textos foi ajustada para exibir destaques com segurança,
+  sem inserir HTML arbitrário retornado pelo modelo.
+
+### Regras financeiras e validação do formulário
+
+- Os tipos da simulação foram separados dos dados visuais do formulário,
+  permitindo reutilização segura no frontend e nas Functions.
+- Os cálculos de saldo disponível, economia mensal necessária e viabilidade
+  foram centralizados em funções puras.
+- Cada etapa passou a validar seu campo antes de avançar.
+- Valores monetários, prazo e textos obrigatórios recebem validações específicas.
+- Entradas inválidas também são rejeitadas novamente no servidor antes de
+  qualquer chamada ao Gemini.
+
+### Histórico e persistência mais robustos
+
+- O armazenamento deixou de representar somente a última resposta e passou a
+  manter uma coleção de simulações identificadas por `crypto.randomUUID()`.
+- Cada registro guarda data de criação, dados financeiros, diagnóstico e
+  conversa correspondente.
+- O insight gerado é armazenado junto à simulação e reutilizado ao reabrir o
+  resultado, evitando uma nova chamada desnecessária à API.
+- Foi criada uma página de histórico com resumo financeiro, navegação para os
+  detalhes, exclusão individual e limpeza completa.
+- Leituras do `localStorage` agora tratam JSON corrompido, estruturas antigas e
+  registros incompletos sem interromper a aplicação.
+- A atualização preserva os demais dados do registro, evitando apagar insight
+  ou conversa ao salvar uma nova informação.
+
+### Conversa contextual com o educador financeiro
+
+- Foi acrescentada uma segunda experiência de IA para perguntas posteriores ao
+  diagnóstico.
+- Cada requisição reúne simulação, diagnóstico inicial, histórico completo e
+  nova pergunta, permitindo continuidade entre os turnos.
+- O prompt conversacional foi separado do prompt estruturado e inclui limites
+  de atuação, linguagem educativa e proteção contra instruções que tentem mudar
+  o papel da IA.
+- Perguntas e respostas são persistidas por simulação e restauradas após
+  recarregar ou reabrir a página.
+- A interface bloqueia envio duplicado, informa carregamento e erro e rola
+  automaticamente até a resposta mais recente.
+
+### Navegação, interface e acessibilidade
+
+- As rotas foram organizadas para formulário, resultado e histórico.
+- Foi adicionada uma página 404 para endereços inexistentes e simulações não
+  encontradas passaram a ter tratamento explícito.
+- Foram aprimorados rótulos, mensagens de validação, estados desabilitados e
+  feedback de nova tentativa.
+- Elementos de status e erro receberam semântica acessível para tecnologias
+  assistivas.
+- O tema claro/escuro continua persistido e sua leitura foi protegida contra
+  valores inválidos.
+- Componentes compartilhados foram ajustados para aceitar estilos e estados de
+  forma mais consistente.
+
+### Responsividade
+
+- Foi removida a causa do overflow horizontal global, em vez de apenas ocultar
+  seu efeito.
+- A altura mínima passou a considerar `100dvh`, melhorando a ocupação da tela em
+  navegadores mobile.
+- O cabeçalho recebeu espaçamentos e comportamento específicos para telas
+  estreitas, mantendo as ações acessíveis.
+- O fluxo foi conferido em larguras de 320, 360, 375, 390, 768 e 1280 pixels.
+
+### Qualidade, testes e manutenção
+
+- Foram adicionados testes para cálculos financeiros e classificação de
+  viabilidade.
+- As regras de validação do formulário ganharam cobertura automatizada.
+- O armazenamento é testado para criação, atualização, exclusão, cache do
+  insight e persistência da conversa.
+- Os serviços são testados para respostas válidas, incompletas e erros HTTP.
+- As Functions são testadas com a chamada ao Gemini simulada, incluindo schema,
+  contexto conversacional e classificação calculada pelo servidor.
+- TypeScript, ESLint, Prettier e configurações separadas de frontend, Vite e
+  Functions passaram a compor a verificação do projeto.
+- Foi adicionada uma página de documentação das regras de negócio e o README
+  passou a registrar execução, arquitetura, segurança, testes e publicação.
+
+### Preparação para produção
+
+- O `netlify.toml` define comando de build, pasta publicada, diretório das
+  Functions e fallback de rotas da SPA.
+- O build de produção gera o frontend em `dist` e empacota as funções com
+  `esbuild` na Netlify.
+- `.env`, artefatos de build e arquivos temporários do TypeScript ficam fora do
+  repositório.
+- A versão esperada do Node e os comandos de instalação, desenvolvimento,
+  validação e deploy foram documentados.
 
 ## Aprendizados durante o desafio
 
