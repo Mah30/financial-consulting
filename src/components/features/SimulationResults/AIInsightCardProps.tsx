@@ -3,6 +3,7 @@ import Skeleton from 'react-loading-skeleton'
 import { useInsight } from '../../../hooks/useInsight'
 import { Content } from '../Insights/Content'
 import { Error } from '../Insights/Error'
+import { AIConversation } from './AIConversation'
 
 interface AIInsightCardProps {
   simulationId: string
@@ -41,7 +42,12 @@ export function AIInsightsCard({ simulationId }: AIInsightCardProps) {
           }}
         />
       )}
-      {!isLoading && insight && !error && <Content insight={insight} />}
+      {!isLoading && insight && !error && (
+        <>
+          <Content insight={insight} />
+          <AIConversation simulationId={simulationId} />
+        </>
+      )}
     </div>
   )
 }

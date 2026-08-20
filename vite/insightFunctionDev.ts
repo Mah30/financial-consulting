@@ -61,6 +61,37 @@ export function insightFunctionDev(geminiApiKey?: string): Plugin {
           next(error)
         }
       })
+      server.middlewares.use('/api/conversation', async (req, res, next) => {
+        try {
+          if (!process.env.GEMINI_API_KEY && geminiApiKey) {
+            process.env.GEMINI_API_KEY = geminiApiKey
+          }
+
+          const url = new URL(
+            req.originalUrl ?? req.url ?? '/api/conversation',
+            `http://${req.headers.host ?? 'localhost'}`,
+          )
+          const method = req.method ?? 'GET'
+          const body =
+            method === 'GET' || method === 'HEAD'
+              ? undefined
+              : await readBody(req)
+          const request = new Request(url, {
+            method,
+            headers: createHeaders(req),
+            body,
+          })
+          const { default: conversationHandler } =
+            await import('../netlify/functions/conversation.mts')
+          const response = await conversationHandler(request)
+
+          res.statusCode = response.status
+          response.headers.forEach((value, name) => res.setHeader(name, value))
+          res.end(Buffer.from(await response.arrayBuffer()))
+        } catch (error) {
+          next(error)
+        }
+      })
     },
   }
 }

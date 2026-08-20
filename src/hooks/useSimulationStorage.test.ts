@@ -48,4 +48,24 @@ describe('simulation storage', () => {
 
     expect(simulationStorage.getAllSimulations()).toEqual([])
   })
+
+  it('persists the conversation with its simulation', () => {
+    const id = simulationStorage.saveFormData(formData)
+    const saved = simulationStorage.getFormData(id)
+    const conversation = [
+      {
+        id: 'turn-1',
+        question: 'Como posso alcançar minha meta antes?',
+        answer: 'Você pode reduzir gastos não essenciais.',
+        createdAt: '2026-08-20T10:00:00.000Z',
+      },
+    ]
+
+    expect(saved).not.toBeNull()
+    simulationStorage.updateSimulation(id, { ...saved!, conversation })
+
+    expect(simulationStorage.getFormData(id)?.conversation).toEqual(
+      conversation,
+    )
+  })
 })

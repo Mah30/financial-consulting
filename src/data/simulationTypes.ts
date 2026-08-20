@@ -1,3 +1,4 @@
+import type { ConversationTurn } from './conversation'
 import type { InsightData } from './insight'
 
 export interface SimulationFormData {
@@ -13,4 +14,5 @@ export interface SimulationRecord extends SimulationFormData {
   id: string
   createdAt?: string
   insight?: InsightData
+  conversation?: ConversationTurn[]
 }

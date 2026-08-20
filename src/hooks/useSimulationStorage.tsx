@@ -2,6 +2,7 @@ import {
   type SimulationFormData,
   type SimulationRecord,
 } from '../data/simulation'
+import { parseConversation } from '../data/conversation'
 
 const LOCAL_STORAGE_KEY = 'simulation-data'
 
@@ -35,6 +36,7 @@ function readSimulations(): SimulationRecord[] {
     return parsed.filter(isStoredSimulation).map((record) => ({
       ...record,
       createdAt: typeof record.createdAt === 'string' ? record.createdAt : '',
+      conversation: parseConversation(record.conversation),
     }))
   } catch {
     return []
