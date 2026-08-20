@@ -1,6 +1,8 @@
 # Poket Mentor
 
-Aplicação web de planejamento financeiro pessoal construída com React,
+Este é um projeto, resultado do Bootcamp Santander 2026-AI React Front-end da Dio.me , para fins de estudo e desenvolver um Educador Financeiro Inteligente com React e IA Generativa. 
+
+A Aplicação web de planejamento financeiro pessoal foi construída com React,
 TypeScript e inteligência artificial generativa. O Poket Mentor ajuda a pessoa
 a avaliar se uma meta financeira é viável, entender seu orçamento e receber
 orientações educativas adaptadas ao cenário informado.
